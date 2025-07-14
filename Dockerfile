@@ -1,14 +1,20 @@
 # Use a standard Python image as a base
 FROM python:3.9-slim
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file and install the libraries
+# THE NEW FIX: Manually create the directory Streamlit needs 
+# and give it open permissions before the app starts.
+RUN mkdir -p /app/.streamlit && chmod -R 777 /app/.streamlit
+
+# Copy requirements file first
 COPY requirements.txt ./
+
+# Install python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your app files (like app.py)
+# Copy the rest of your application files
 COPY . .
 
 # Tell Hugging Face which port the app will run on
